@@ -24,10 +24,9 @@ CONTRACT onnotify: public contract {
                         row.balance += quantity;
                     });
                 }
-            } else {
-                print("you are not from");
             }
-            if (to == get_self()) {
+            
+            else if (to == get_self()) {
                 ins myTable(get_self(), get_self().value);
 
                 if (myTable.begin() == myTable.end() ){
@@ -40,9 +39,7 @@ CONTRACT onnotify: public contract {
                         row.balance += quantity;
                     });
                     }
-            } else {
-                print("you are not to");
-            }
+            } 
         }
 
 
