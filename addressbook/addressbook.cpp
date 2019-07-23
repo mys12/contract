@@ -25,13 +25,13 @@ CONTRACT addressbook: public contract {
                     row.user = user;
                     row.age = age; 
                 });
-                print("insert success");
+                send_summary(user, " successfully emplaced record to addressbook");
             } else {
                 forUpsert.modify(itr, user, [&](auto& row) {
                     row.user = user;
                     row.age = age;
                 });
-                print("modify success");
+                send_summary(user, " successfully modified record to addressbook");
             } 
             
         }
@@ -56,7 +56,12 @@ CONTRACT addressbook: public contract {
             address_index forErase(get_self(), get_self().value); 
             auto itr = forErase.require_find(user.value, "no account"); 
             forErase.erase(itr);
-            print("erase success");
+            send_summary(user, " successfully erased record from addressbook");
+        }
+        [[eosio::action]]
+        void notify(name user, std::string msg) {
+            require_auth(get_self());
+            require_recipient(user);
         }
 
     private:
@@ -66,6 +71,14 @@ CONTRACT addressbook: public contract {
 
             uint64_t primary_key() const { return user.value; }     
             uint64_t by_age() const { return age; }
+        };
+        void send_summary(name user, std::string message) {
+            action(
+                permission_level{get_self(),"active"_n},
+                get_self(),
+                "notify"_n,
+                std::make_tuple(user, name{user}.to_string() + message)
+            ).send();
         };
         typedef multi_index<"peopletwo"_n, person, indexed_by<"byage"_n, const_mem_fun<person, uint64_t, &person::by_age>> >address_index;      // multi_index<>를 address_index로 간단하게 변환
 };
