@@ -8,13 +8,13 @@ CONTRACT example: public contract {
         using contract::contract;
             
             ACTION hi(name user) {
-             bool isTrue = has_auth(get_self());
-             check(isTrue, "you aint a contract deployer!!");
-             
-             address_index forHi(get_self(), get_self().value);
-             auto itr = forHi.find(user.value);
-             check(itr == forHi.end(), "already done");
-             print("hello, ", user);
+                bool isTrue = has_auth(get_self());
+                check(isTrue, "you aint a contract deployer!!");
+                
+                address_index forHi(get_self(), get_self().value);
+                auto itr = forHi.find(user.value);
+                check(itr == forHi.end(), "already done");
+                print("hello, ", user);
             }
             
             ACTION insert(name user){
